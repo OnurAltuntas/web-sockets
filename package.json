@@ -17,10 +17,11 @@
     "socket.io-client": "^2.3.0"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "node server",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "dev": "nodemon server"
   },
   "eslintConfig": {
     "extends": "react-app"
