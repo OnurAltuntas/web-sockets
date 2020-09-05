@@ -1,10 +1,16 @@
 const express = require("express");
+const path = require("path");
 const http = require("http");
 const socketIo = require("socket.io");
 const PORT = process.env.PORT || 5000;
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server); // < Interesting!
+
+
+//Set static folder
+app.use(express.static(path.join(__dirname,"public")))
+
 
 const CANVAS_WIDTH = 600;
 const CANVAS_HEIGHT = 400;

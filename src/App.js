@@ -25,7 +25,7 @@ export default class App extends Component {
   }
 
   start = () =>{
-    var socket = io('http://localhost:5000');
+    var socket = io();
 
     if(!this.state.isGameRunning){
       this.game = new Game(this.getCtx(), socket);
