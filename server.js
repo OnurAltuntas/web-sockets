@@ -9,7 +9,7 @@ const io = socketIo(server); // < Interesting!
 
 
 //Set static folder
-app.use(express.static(path.join(__dirname,"public")))
+app.use(express.static(path.join(__dirname,"build")))
 
 
 const CANVAS_WIDTH = 600;
