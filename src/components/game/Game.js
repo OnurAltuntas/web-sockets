@@ -1,4 +1,4 @@
-const Player = require("./Player");
+import Player from "./Player";
 const CANVAS_WIDTH = 600;
 const CANVAS_HEIGHT = 400;
 
@@ -80,4 +80,4 @@ class Game {
   };
 }
 
-module.exports = Game;
+export default Game;
