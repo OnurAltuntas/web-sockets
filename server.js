@@ -94,7 +94,8 @@ var Game = function Game() {
           player.x + player.width >  wall.x &&
           player.y <  wall.y +  wall.height &&
           player.y + player.height > wall.y) {
-           alert("collision detect");
+
+            player.isDead = true;
        }
       })
      
@@ -126,8 +127,8 @@ io.on("connection", function (socket) {
  const playerInterval = setInterval(()=>{
   io.sockets.emit('PLAYERS_UPDATE', game.players.map(player => ({
     id: player.id,
-   /*  name: player.name,
     isDead: player.isDead,
+   /*  name: player.name,
     health: player.health,
     coins: player.coins,
     medkits: player.medkits, */

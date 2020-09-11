@@ -4,6 +4,7 @@ class Player {
     this.id = 0;
     this.x = 0;
     this.y = 0;
+    this.isDead = false;
 
     this.dirx = 0;
     this.diry = 0;
@@ -20,9 +21,12 @@ class Player {
     //this.width -= 50;
     //this.height -= 50;
 
-    this.ctx.fillStyle = "red";
-    this.ctx.fillRect(this.x, this.y, this.width,this.height);
-  };
+    if(!this.isDead){
+      this.ctx.fillStyle = "red";
+      this.ctx.fillRect(this.x, this.y, this.width,this.height);
+    }
+
+    };
 }
 
 export default Player;

@@ -58,9 +58,9 @@ class Game {
         const newPlayer = new Player(this.ctx, this);
         newPlayer.id = players[i].id;
       /*   newPlayer.name = players[i].name;
-        newPlayer.health = players[i].health;
+        newPlayer.health = players[i].health; */
         newPlayer.isDead = players[i].isDead;
-        newPlayer.coins = players[i].coins;
+      /*   newPlayer.coins = players[i].coins;
         newPlayer.medkits = players[i].medkits; */
         newPlayer.x = players[i].x;
         newPlayer.y = players[i].y;
