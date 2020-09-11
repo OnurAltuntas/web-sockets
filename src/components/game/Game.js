@@ -57,7 +57,8 @@ class Game {
       for (var i = 0; i < players.length; i++) {
         const newPlayer = new Player(this.ctx, this);
         newPlayer.id = players[i].id;
-      /*   newPlayer.name = players[i].name;
+        newPlayer.name = players[i].name;
+      /*  
         newPlayer.health = players[i].health; */
         newPlayer.isDead = players[i].isDead;
       /*   newPlayer.coins = players[i].coins;
@@ -81,6 +82,8 @@ class Game {
       newPlayer.medkits = players[i].medkits; */
       newWall.x = walls[i].x;
       newWall.y = walls[i].y;
+      newWall.secondPartY = walls[i].secondPartY;
+
       /*  newPlayer.type = players[i].type; */
       newWalls.push(newWall);
     }

@@ -34,9 +34,20 @@ export default class App extends Component {
       this.loop();  
     }
     this.setState(state =>({isGameRunning: !state.isGameRunning}));
+
+
+    socket.emit('PLAYER_NAME_UPDATE', { name: this.state.name });
+    /* if (!this.state.isGameRunning) {
+      this.game = new Game(this.getCtx(), socket);
+      this.loop();
+    }
+    this.setState(state => ({nameEntered: true, isGameRunning: !state.isGameRunning})); */
+  
   }
 
   getCtx = () => this.canvasRef.current.getContext("2d");
+
+  
 
   loop = () => {
     requestAnimationFrame(() =>{ 
@@ -57,17 +68,19 @@ export default class App extends Component {
 
 
   render() {
+   
     return (
-      <div>
-
-      <button onClick={this.start} >Start</button>
-      <canvas
-      ref={this.canvasRef}
-      width={CANVAS_WIDTH}
-      height={CANVAS_HEIGHT}
-      style={{ backgroundColor: "grey" }}
-    />
-    
+      <div style={{height: '100%'}}>
+        {!this.state.nameEntered && (
+          <div>
+            <input type="text" onChange={(evt) => this.setState({name: evt.target.value.substring(0, 6).toLowerCase()})} />
+            <button disabled={!this.state.name} onClick={this.start}>START!</button>
+          </div>
+        )}
+        <div style={{height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: 'black'}}>
+          <canvas ref={this.canvasRef} width={CANVAS_WIDTH} height={CANVAS_HEIGHT}>
+          </canvas>
+        </div>
       </div>
     );
   }
