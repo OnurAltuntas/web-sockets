@@ -45,9 +45,9 @@ var Wall = function (game) {
   this.game = game;
   this.id = 0;
   this.x = 500;
-  this.yList = [-70,-60,-50,-40,-30,-10,0];
+  this.yList = [-70, -60, -50, -40, -30, -10, 0];
   this.y = this.yList[Math.floor(Math.random() * this.yList.length)];
-  this.secondPartY = this.y + 250 ;
+  this.secondPartY = this.y + 250;
 
   this.dirx = 100;
   this.diry = 0;
@@ -97,8 +97,7 @@ var Game = function Game() {
 
     for (let k = 0; k < this.walls.length; k++) {
       const wall = this.walls[k];
-      if(wall.x < 0)
-      this.walls.splice(k,1);
+      if (wall.x < 0) this.walls.splice(k, 1);
       wall.update();
     }
 
@@ -115,12 +114,12 @@ var Game = function Game() {
             item.id !== player.id;
           });
         }
-        if(
+        if (
           player.x < wall.x + wall.width &&
           player.x + player.width > wall.x &&
           player.y < wall.secondPartY + wall.height &&
           player.y + player.height > wall.secondPartY
-        ){
+        ) {
           player.isDead = true;
           this.players.filter((item) => {
             item.id !== player.id;
@@ -149,7 +148,7 @@ const interval = setInterval(() => {
       game.walls.map((wall) => ({
         x: wall.x,
         y: wall.y,
-        secondPartY : wall.secondPartY
+        secondPartY: wall.secondPartY,
       }))
     );
   }
@@ -196,8 +195,8 @@ io.on("connection", function (socket) {
     if (data.diry !== undefined) player[0].diry = data.diry;
   });
 
-  socket.on('PLAYER_NAME_UPDATE', function (data) {
-    const player = game.players.filter(player => player.id === socket.id)
+  socket.on("PLAYER_NAME_UPDATE", function (data) {
+    const player = game.players.filter((player) => player.id === socket.id);
     player[0].name = data.name;
   });
 });

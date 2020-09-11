@@ -16,6 +16,7 @@ class Wall {
     }
   
     draw = () => {
+      
   
       //this.x -= 1;  
       this.ctx.fillStyle = "orange";

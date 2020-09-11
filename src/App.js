@@ -72,7 +72,7 @@ export default class App extends Component {
     return (
       <div style={{height: '100%'}}>
         {!this.state.nameEntered && (
-          <div>
+          <div style={{height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: 'black'}}>
             <input type="text" onChange={(evt) => this.setState({name: evt.target.value.substring(0, 6).toLowerCase()})} />
             <button disabled={!this.state.name} onClick={this.start}>START!</button>
           </div>
