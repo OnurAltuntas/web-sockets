@@ -89,6 +89,12 @@ class Game {
     }
     this.walls = newWalls;
     });
+
+    this.socket.on('GAME_STATE_UPDATE', (state) => {
+      this.gameOver = state.gameOver;
+      this.winnerId = state.winnerId;
+    });
+
   };
 
   draw = () => {

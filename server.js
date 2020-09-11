@@ -54,7 +54,7 @@ var Wall = function (game) {
   this.targetX = 0;
   this.targetY = 0;
   this.width = 100;
-  this.height = 150;
+  this.height = 100;
 
   Wall.prototype.update = function update() {
     this.x -= 2;
@@ -64,7 +64,7 @@ var Wall = function (game) {
 var Game = function Game() {
   this.players = []; //new Player(ctx);
   this.walls = [];
-  this.isStarted = true;
+  this.isStarted = false;
   this.winnerId = null;
   this.name = null;
   this.gameOver = false;
@@ -79,21 +79,34 @@ var Game = function Game() {
   };
 
   Game.prototype.update = function update() {
+    this.isStarted = true;
+    /* if (this.players.length === 2) {
+      this.isStarted = true;
+    } */
+    if (!this.isStarted)
+    return;
+
+
     //Burada gameOver yapılması lazım
     console.log(this.walls.length);
 
-    const alive = this.players.filter((player) => !player.isDead);
-    this.aliveCount = alive.length;
-    if (alive.length === 1 && alive[0].isDead === true) {
-      console.log(alive[0].id);
-      this.gameOver = true;
-      this.gameEndedAt = Date.now();
+    const alivePlayerCount = this.players.filter(player => !player.isDead).length;
+    for (var m = 0; m < this.players.length; m++) {
+      const player = this.players[m];
+  
+      if (alivePlayerCount === 1 && !player.isDead) {
+        console.log(player.isDead);
+        this.winnerId = player.id;
+        this.gameOver = true;
+        this.gameEndedAt = Date.now();
+      }
+  
+      if (!this.gameOver) {
+        player.update();
+      }
     }
 
-    for (let m = 0; m < this.players.length; m++) {
-      const player = this.players[m];
-      player.update();
-    }
+    const now = Date.now();
 
     for (let k = 0; k < this.walls.length; k++) {
       const wall = this.walls[k];
@@ -137,12 +150,14 @@ const wallInterval = setInterval(() => {
 }, 2000);
 
 const interval = setInterval(() => {
-  if (this.aliveCount === 0) {
-    console.log("game over");
-    clearInterval(wallInterval);
-  } else {
-    game.update();
+  if (game.gameOver && Date.now() - game.gameEndedAt > 10000) {
+    game = new Game();
 
+  } else if (game.players.length) {
+   
+    game.update();
+  }
+    //Belki bundandır
     io.sockets.emit(
       "WALLS_UPDATE",
       game.walls.map((wall) => ({
@@ -151,8 +166,31 @@ const interval = setInterval(() => {
         secondPartY: wall.secondPartY,
       }))
     );
-  }
+  
 }, 1000 / 60);
+
+
+const playerInterval = setInterval(() => {
+  io.sockets.emit(
+    "PLAYERS_UPDATE",
+    game.players.map((player) => ({
+      id: player.id,
+      isDead: player.isDead,
+      name: player.name,
+   
+      x: player.x,
+      y: player.y,
+    }))
+  );
+
+  if (game.gameOver) {
+    io.sockets.emit('GAME_STATE_UPDATE', {
+      gameOver: game.gameOver,
+      winnerId: game.winnerId,
+    });
+  }
+
+}, 1000 / 30);
 
 io.on("connection", function (socket) {
   console.log("user connected!" + socket.id);
@@ -160,22 +198,13 @@ io.on("connection", function (socket) {
 
   console.log("number of players : " + game.players.length);
 
-  const playerInterval = setInterval(() => {
-    io.sockets.emit(
-      "PLAYERS_UPDATE",
-      game.players.map((player) => ({
-        id: player.id,
-        isDead: player.isDead,
-        name: player.name,
-        /*  
-    health: player.health,
-    coins: player.coins,
-    medkits: player.medkits, */
-        x: player.x,
-        y: player.y,
-      }))
-    );
-  }, 1000 / 30);
+  setInterval(() => {
+    if (game.gameOver) {
+      socket && socket.disconnect(true);
+    }
+  }, 1000);
+
+  
 
   socket.on("disconnect", function () {
     clearInterval(playerInterval);
