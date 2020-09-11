@@ -1,4 +1,5 @@
 import Player from "./Player";
+import Wall from "./Wall";
 const CANVAS_WIDTH = 600;
 const CANVAS_HEIGHT = 400;
 
@@ -9,7 +10,7 @@ class Game {
       this.ctx = ctx;
       
       this.players = [];
-  
+      this.walls = [];
       
      
    }
@@ -50,6 +51,7 @@ class Game {
   update = () => {
    window.addEventListener('keydown', this.onKeyDown);
    window.addEventListener('keyup', this.onKeyUp);
+   //players update
    this.socket.on('PLAYERS_UPDATE', (players) => {
       const newPlayers = [];
       for (var i = 0; i < players.length; i++) {
@@ -67,6 +69,23 @@ class Game {
       }
       this.players = newPlayers;
     });
+    //walls update
+    this.socket.on('WALLS_UPDATE', (walls) => {
+    const newWalls = [];
+    for (var i = 0; i < walls.length; i++) {
+      const newWall = new Wall(this.ctx, this);
+    /*   newPlayer.name = players[i].name;
+      newPlayer.health = players[i].health;
+      newPlayer.isDead = players[i].isDead;
+      newPlayer.coins = players[i].coins;
+      newPlayer.medkits = players[i].medkits; */
+      newWall.x = walls[i].x;
+      newWall.y = walls[i].y;
+      /*  newPlayer.type = players[i].type; */
+      newWalls.push(newWall);
+    }
+    this.walls = newWalls;
+    });
   };
 
   draw = () => {
@@ -75,6 +94,11 @@ class Game {
     for (let i = 0; i < this.players.length; i++) {
       const player = this.players[i];
       player.draw();
+    }
+
+    for (let i = 0; i < this.walls.length; i++) {
+      const wall = this.walls[i];
+      wall.draw();
     }
 
   };

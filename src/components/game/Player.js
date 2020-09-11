@@ -1,8 +1,6 @@
 class Player {
   constructor(ctx) {
 
-    // TODO serverdan al 
-
     this.id = 0;
     this.x = 0;
     this.y = 0;
@@ -18,8 +16,12 @@ class Player {
   }
 
   draw = () => {
+
+    //this.width -= 50;
+    //this.height -= 50;
+
     this.ctx.fillStyle = "red";
-    this.ctx.fillRect(this.x, this.y, this.width, this.height);
+    this.ctx.fillRect(this.x, this.y, this.width,this.height);
   };
 }
 

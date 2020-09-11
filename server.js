@@ -9,7 +9,7 @@ const io = socketIo(server); // < Interesting!
 
 
 //Set static folder
-app.use(express.static(path.join(__dirname,"build")))
+//app.use(express.static(path.join(__dirname,"build")))
 
 
 const CANVAS_WIDTH = 600;
@@ -20,6 +20,8 @@ var Player = function (game, id) {
   // TODO serverdan al
 
   this.id = id;
+  this.isDead = false;
+  this.name = '';
   this.x = 0;
   this.y = 0;
 
@@ -37,14 +39,41 @@ var Player = function (game, id) {
 
     this.x = this.x + (this.targetX - this.x) * 0.5;
     this.y = this.y + (this.targetY - this.y) * 0.5;
+
+    
+    
   };
 };
 
+var Wall = function (game)  {
+  this.game = game;
+
+    this.id = 0;
+    this.x = 500;
+    this.y = 0;
+
+    this.dirx = 100;
+    this.diry = 0;
+    this.targetX = 0;
+    this.targetY = 0;
+    this.width = 50;
+    this.height = 200; 
+
+    Wall.prototype.update = function update() {
+      this.x -= 1;
+    };
+
+  }
+
 var Game = function Game() {
   this.players = []; //new Player(ctx);
+  this.walls = [];
 
   Game.prototype.addPlayer = function addPlayer(id) {
     this.players.push(new Player(this, id));
+  };
+  Game.prototype.addWall = function addWall() {
+    this.walls.push(new Wall(this));
   };
 
   Game.prototype.update = function update() {
@@ -53,6 +82,25 @@ var Game = function Game() {
       const player = this.players[m];
       player.update();
     }
+
+    for (let k = 0; k < this.walls.length; k++) {
+      const wall = this.walls[k];
+      wall.update();
+    }
+
+    this.players.map((player)=>{
+      this.walls.map((wall)=>{
+        if (player.x <wall.x +  wall.width &&
+          player.x + player.width >  wall.x &&
+          player.y <  wall.y +  wall.height &&
+          player.y + player.height > wall.y) {
+           alert("collision detect");
+       }
+      })
+     
+    })
+
+    
   };
 };
 
@@ -66,6 +114,13 @@ const interval = setInterval(() => {
 io.on("connection", function (socket) {
   console.log("user connected!" + socket.id);
   game.addPlayer(socket.id);
+  setInterval(()=>{
+    game.addWall();
+
+
+    
+  },4000)
+ 
   console.log("number of players : " + game.players.length);
 
  const playerInterval = setInterval(()=>{
@@ -81,9 +136,22 @@ io.on("connection", function (socket) {
   })));
  },1000/ 30)
 
+ const wallInterval = setInterval(()=>{
+  io.sockets.emit('WALLS_UPDATE', game.walls.map(wall => ({
+   /*  name: player.name,
+    isDead: player.isDead,
+    health: player.health,
+    coins: player.coins,
+    medkits: player.medkits, */
+    x: wall.x,
+    y: wall.y,
+  })));
+ },1000/ 30)
+
   socket.on("disconnect", function () {
     clearInterval(playerInterval);
-
+    clearInterval(wallInterval); //aslında tüm oyun bitince olcak bu isGameFinish
+    
     game.players = game.players.filter((player) => player.id !== socket.id);
     console.log("user disconnected!" + socket.id);
     console.log("number of players:" + game.players.length);
@@ -92,10 +160,8 @@ io.on("connection", function (socket) {
   socket.on('PLAYER_DIRECTION_UPDATE',function(data){
     const player = game.players.filter((player) => player.id == socket.id);
 
-    console.log(player.dirx);
-    console.log(player.diry);
-
-
+    /* console.log(player.dirx);
+    console.log(player.diry); */
   
       if(data.dirx !== undefined) 
       player[0].dirx = data.dirx;
@@ -103,6 +169,7 @@ io.on("connection", function (socket) {
       player[0].diry = data.diry;
   
   });
+  
 });
 
 server.listen(PORT, () => console.log(`Server has started on port ${PORT}`));
