@@ -5,9 +5,46 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  
+
+ 
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+html {
+  background: url("https://cdn.pixabay.com/photo/2017/10/04/23/54/spiral-2817979_1280.jpg") no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+.root-div{
+  background-color: white;
+   position: fixed;
+  top: 50%;
+  left: 50%;
+  /* bring your own prefixes */
+  transform: translate(-50%, -50%);
+  border:solid 1px;
+  border-radius: 20px;
+}
+.input{
+  border-radius: 20px;
+}
+.canvas-div{
+  margin: 0 auto;
+ 
+}
+
+h1 {
+  text-align: center;
+  font-family: 'Knewave', cursive;
+  font-size: 72px;
+  color:orange;
 }

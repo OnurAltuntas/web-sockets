@@ -93,8 +93,8 @@ var Game = function Game() {
     const alivePlayerCount = this.players.filter(player => !player.isDead).length;
     for (var m = 0; m < this.players.length; m++) {
       const player = this.players[m];
-  
-      if (alivePlayerCount === 1 && !player.isDead) {
+      //isDead bugu var bulamadım.
+      if (alivePlayerCount === 1 && player.isDead) {
         console.log(player.isDead);
         this.winnerId = player.id;
         this.gameOver = true;
@@ -203,8 +203,6 @@ io.on("connection", function (socket) {
       socket && socket.disconnect(true);
     }
   }, 1000);
-
-  
 
   socket.on("disconnect", function () {
     clearInterval(playerInterval);
